@@ -13,27 +13,24 @@ async function main() {
   // const _appId = `${process.env.NEXT_PUBLIC_APP_ID}`;
   // console.log(_appId);
   const appId = BigInt("317627209104769491736779965566729912327616856064").toString();
-  console.log("App Id", appId);
+  // console.log("App Id", appId);
 
-  const AnonAadhaarVerifier = await ethers.getContractFactory("AnonAadhaarVerifier")
+  const AnonAadhaarVerifier = await ethers.getContractFactory("AnonAadhaarVerifier");
   const anonAadhaarVerifier = await AnonAadhaarVerifier.deploy(_verifierAddress, appId);
-  // const anonAadhaarVerifier = await ethers.deployContract(
-  //   "AnonAadhaarVerifier",
-  //   [_verifierAddress, appId]
-  // );
   await anonAadhaarVerifier.deployed();
 
   const _anonAadhaarVerifierAddress = anonAadhaarVerifier.address;
 
-  // const vote = await ethers.deployContract("Vote", [
-  //   "Do you like this app?",
-  //   ["0", "1", "2", "3", "4", "5"],
-  //   _anonAadhaarVerifierAddress,
-  // ]);
+  const Vote = await ethers.getContractFactory("Vote");
+  const vote = await Vote.deploy(
+    "Do you like this app?",
+    ["0", "1", "2", "3", "4", "5"],
+    _anonAadhaarVerifierAddress,
+  );
 
-  // await vote.waitForDeployment();
+  await vote.deployed();
 
-  console.log(`AnonAadhar contract deployed to ${_anonAadhaarVerifierAddress}`);
+  console.log(`Vote contract deployed to ${vote.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
